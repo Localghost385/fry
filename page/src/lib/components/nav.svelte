@@ -25,8 +25,8 @@
 			url: '/'
 		},
 		{
-			name: 'About',
-			url: '/about'
+			name: 'Process An Image',
+			url: '/process'
 		}
 	];
 </script>
