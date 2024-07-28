@@ -1,22 +1,8 @@
 <script async>
-	import { onMount } from 'svelte';
-	import { Card, Button, Toggle } from 'flowbite-svelte';
-	import {
-		Section,
-		News,
-		HeroHeader,
-		HeroBody,
-		Quotes,
-		Testimonial,
-		TestimonialCard,
-		TestimonialCardItem
-	} from 'flowbite-svelte-blocks';
-	import { Pagination } from 'flowbite-svelte';
-	import { ChevronLeftOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
+	import { HeroHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { fade } from 'svelte/transition';
-	import { sineInOut } from 'svelte/easing';
-	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import ExpandBar from '$lib/components/expand_bar.svelte';
 </script>
 
 <div
@@ -24,34 +10,25 @@
 >
 	<div class=" h-full w-full flex flex-col items-center justify-center gap-[3vw]">
 		<div class=" place-self-center lg:col-span-7">
-			<HeroHeader
-				h1Class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white"
-				pClass="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
-			>
-				<svelte:fragment slot="h1">Glyph.rs</svelte:fragment>
-				<svelte:fragment slot="paragraph">A text art generator written in Rust.</svelte:fragment>
-			</HeroHeader>
+			<div class="flex flex-col">
+				<div
+					class="max-w-2xl text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-light"
+				>
+					Fry
+				</div>
+				<div class="max-w-2xl mt-4 mb-4 font-light text-dark md:text-lg lg:text-xl dark:text-light">
+					An image processing tool from hell.
+				</div>
+				<a
+					class="h-10 w-36 flex flex-row items-center justify-center rounded-[2.5rem] text-center leading-[2.4rem] border-[1px] border-dark dark:border-light bg-light dark:bg-dark text-dark dark:text-light [&:hover>.arrow]:w-6 [&:hover>.arrow]:opacity-100 [&:hover>.arrow]:mr-0 [&:hover>.button-content]:ml-2"
+					href="/process"
+				>
+					<div class="button-content ml-4 transition-all duration-300">Get Started</div>
+					<div class="arrow w-0 opacity-0 mr-5 transition-all duration-300 flex flex-row items-center justify-center">
+						<ArrowRightOutline />
+					</div>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>
-<!-- 
-<div
-	class="min-h-[20vw] w-full relative flex flex-col items-center justify-center p-10 border-t-2 border-b-2 border-black dark:border-white"
->
-	<div class="w-full mb-10 flex flex-col items-center justify-center text-4xl">
-		<div>Examples</div>
-	</div>
-	<Testimonial>
-		<pre class="fira-code leading-tight text-lg font-medium text-gray-900 dark:text-white">
- ██████╗ ██╗     ██╗   ██╗██████╗ ██╗  ██╗   ██████╗ ███████╗
-██╔════╝ ██║     ╚██╗ ██╔╝██╔══██╗██║  ██║   ██╔══██╗██╔════╝
-██║  ███╗██║      ╚████╔╝ ██████╔╝███████║   ██████╔╝███████╗
-██║   ██║██║       ╚██╔╝  ██╔═══╝ ██╔══██║   ██╔══██╗╚════██║
-╚██████╔╝███████╗   ██║   ██║     ██║  ██║██╗██║  ██║███████║
- ╚═════╝ ╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
-			</pre>
-		<div class="w-full flex flex-col items-center justify-center">
-			<div>Shadow</div>
-		</div>
-	</Testimonial>
-</div> -->

@@ -29,7 +29,9 @@ const config = {
 					700: '#EB4F27',
 					800: '#CC4522',
 					900: '#A5371B'
-				}
+				},
+				light: '#ffffff',
+				dark: '#41445a'
 			}
 		}
 	}

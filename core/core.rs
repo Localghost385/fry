@@ -3,22 +3,32 @@
 use image::imageops::contrast;
 use image::{DynamicImage, ImageBuffer};
 use rand::Rng;
+use std::io::Cursor;
+use wasm_bindgen::prelude::*;
 
 // █▀▄ ██▀ ▄▀▄ █▀▄   █ █▄ ▄█ ▄▀▄ ▄▀  ██▀   █▀ █▀▄ ▄▀▄ █▄ ▄█   ██▄ ▀▄▀ ▀█▀ ██▀ ▄▀▀
 // █▀▄ █▄▄ █▀█ █▄▀   █ █ ▀ █ █▀█ ▀▄█ █▄▄   █▀ █▀▄ ▀▄▀ █ ▀ █   █▄█  █   █  █▄▄ ▄██
 fn read_image(image_data: &[u8]) -> image::DynamicImage {
     let img = image::load_from_memory(image_data).unwrap();
-    image::DynamicImage::ImageRgba8(contrast(&img, 2.0))
+    image::DynamicImage::ImageRgba8(contrast(&img, 5.0))
 }
 
 // ▄▀▀ ▄▀▄ █ █ ██▀   █ █▄ ▄█ ▄▀▄ ▄▀  ██▀
 // ▄██ █▀█ ▀▄▀ █▄▄   █ █ ▀ █ █▀█ ▀▄█ █▄▄
-fn save_img(pixels: ImageBuffer<image::Rgb<u8>, Vec<u8>>, pixels_vec: Vec<u8>) {
+fn save_img(pixels: ImageBuffer<image::Rgb<u8>, Vec<u8>>, pixels_vec: Vec<u8>) -> Vec<u8> {
     let new_img: ImageBuffer<image::Rgb<u8>, Vec<u8>> =
         ImageBuffer::from_vec(pixels.width(), pixels.height(), pixels_vec).unwrap();
     let output_image = DynamicImage::from(new_img);
     let output_image = image::DynamicImage::ImageRgba8(contrast(&output_image, 20.0));
-    output_image.save("./dest/fried.png").unwrap();
+    let mut output_bytes: Vec<u8> = Vec::new();
+    output_image
+        .write_to(
+            &mut Cursor::new(&mut output_bytes),
+            image::ImageOutputFormat::Png,
+        )
+        .unwrap();
+
+    output_bytes
 }
 
 // ██▀ █▀▄ ▄▀  ██▀   █▀▄ ██▀ ▀█▀ ██▀ ▄▀▀ ▀█▀ █ ▄▀▄ █▄ █
@@ -27,7 +37,7 @@ fn detect_edges(img: &image::DynamicImage) -> ImageBuffer<image::Rgb<u8>, Vec<u8
     let detection = edge_detection::canny(
         img.to_luma8(),
         1.2,  // sigma
-        0.5,  // strong threshold
+        0.2,  // strong threshold
         0.01, // weak threshold
     );
     detection.as_image().clone().into_rgb8()
@@ -140,7 +150,7 @@ fn post_process(
         rgb.sort();
         if rgb[2] <= rgb[1]
             && rgb[1] <= rgb[0]
-            && rgb[0] as u16 + rgb[1] as u16 + rgb[2] as u16 > 10
+            && (rgb[0] + 10) as u16 + (rgb[1] + 10) as u16 + (rgb[2] + 10) as u16 > 10
         {
             pixel[0] = saturate[0];
             pixel[1] = saturate[1];
@@ -158,7 +168,7 @@ fn post_process(
         }
         i += 3;
 
-        let mut rng = rand::thread_rng();
+        let mut rng: rand::prelude::ThreadRng = rand::thread_rng();
 
         if pixel[0] < 85 {
             pixel[0] = 0;
@@ -222,8 +232,9 @@ fn invert_chunks(mut pixels_vec: Vec<u8>, pixels_width: u32, pixels_height: u32)
 
 // █▄ ▄█ ▄▀▄ █ █▄ █
 // █ ▀ █ █▀█ █ █ ▀█
-fn main() {
-    let image_bytes = include_bytes!("../source/input.jpg");
+#[wasm_bindgen]
+pub fn main() -> Vec<u8> {
+    let image_bytes = include_bytes!("tmp2.jpg");
     let img = read_image(image_bytes);
     let edge_detection = detect_edges(&img);
     let pixels = img.into_rgb8();
@@ -251,5 +262,5 @@ fn main() {
 
     let pixels_vec = invert_chunks(pixels_vec.clone(), pixels.width(), pixels.height());
 
-    save_img(pixels, pixels_vec.clone());
+    save_img(pixels, pixels_vec)
 }

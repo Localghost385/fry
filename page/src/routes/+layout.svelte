@@ -1,6 +1,6 @@
 <script>
-	import Nav from '$lib/components/universal/nav.svelte';
-	import Footer from '$lib/components/universal/footer.svelte';
+	import Nav from '$lib/components/nav.svelte';
+	import Footer from '$lib/components/footer.svelte';
 	import { Spinner } from 'flowbite-svelte';
 
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
@@ -16,7 +16,7 @@
 	import '$lib/app.css';
 </script>
 
-<div class=" dark:bg-gray-900 transition-colors duration-300">
+<div class=" bg-light dark:bg-dark text-dark dark:text-light border-dark dark:border-light transition-colors duration-300">
 	<Nav />
 
 	<div class="hidden visible" />
