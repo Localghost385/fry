@@ -55,21 +55,23 @@
 		activeClass="text-dark dark:text-light"
 		nonActiveClass="text-dark dark:text-light [&>.expand-bar]:scale-x-0"
 	>
-		{#each links as link}
-			<NavLi
-				on:click={() => {
-					hide_menu = true;
-				}}
-				href={link.url}
-			>
-				<div>
-					{link.name}
-				</div>
-				<div class="expand-bar">
-					<ExpandBar />
-				</div>
-			</NavLi>
-		{/each}
+		{#key activeUrl}
+			{#each links as link}
+				<NavLi
+					on:click={() => {
+						hide_menu = true;
+					}}
+					href={link.url}
+				>
+					<div>
+						{link.name}
+					</div>
+					<div class="expand-bar">
+						<ExpandBar />
+					</div>
+				</NavLi>
+			{/each}
+		{/key}
 	</NavUl>
 </Navbar>
 
