@@ -15,8 +15,7 @@
 
 	import ExpandBar from './expand_bar.svelte';
 
-	$: activeUrl = $page.url.pathname;
-
+	$: activeUrl = $page.url.pathname === '/' ? '/' : $page.url.pathname.replace(/\/$/, '');
 	$: hide_menu = true;
 
 	let links = [
@@ -53,7 +52,7 @@
 		hidden={hide_menu}
 		{activeUrl}
 		activeClass="text-dark dark:text-light"
-		nonActiveClass="text-dark dark:text-light [&>.expand-bar]:scale-x-0"
+		nonActiveClass="text-dark dark:text-light [&>.expand-bar]:opacity-0"
 	>
 		{#key activeUrl}
 			{#each links as link}

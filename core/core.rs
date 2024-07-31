@@ -234,7 +234,7 @@ fn invert_chunks(mut pixels_vec: Vec<u8>, pixels_width: u32, pixels_height: u32)
 // █ ▀ █ █▀█ █ █ ▀█
 #[wasm_bindgen]
 pub fn main() -> Vec<u8> {
-    let image_bytes = include_bytes!("tmp2.jpg");
+    let image_bytes = include_bytes!("tmp.jpg");
     let img = read_image(image_bytes);
     let edge_detection = detect_edges(&img);
     let pixels = img.into_rgb8();

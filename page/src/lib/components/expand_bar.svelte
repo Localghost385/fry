@@ -23,4 +23,3 @@
 	class="h-[2px] w-full bg-dark dark:bg-light transform transition-transform origin-left"
 	bind:this={Header_underline}
 />
-
