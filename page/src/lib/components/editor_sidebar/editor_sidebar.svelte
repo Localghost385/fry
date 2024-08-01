@@ -13,17 +13,17 @@
 		RestoreWindowOutline,
 		LifeSaverSolid
 	} from 'flowbite-svelte-icons';
-
 	import { createEventDispatcher, onMount, setContext } from 'svelte';
+	import Bottom from './children/bottom.svelte';
+	import Middle from './children/middle.svelte';
+	import Top from './children/top.svelte';
+
 	const dispatch = createEventDispatcher();
+	function process() {
+		dispatch('process');
+	}
 
-	let spanClass = 'flex-1 ms-3 whitespace-nowrap';
-	$: preview_value = 'Upload a thumbnail';
-	let img_array = new Uint8Array(0);
-
-	let fileuploadprops = {
-		id: 'user_avatar'
-	};
+	export let update_file;
 
 	let Sidebar_element = undefined;
 
@@ -31,13 +31,6 @@
 		resetClasses();
 		setTimeout(updateClasses, 1);
 	});
-
-	function reader(file, callback) {
-		const fr = new FileReader();
-		fr.onload = () => callback(null, fr.result);
-		fr.onerror = (err) => callback(err);
-		fr.readAsArrayBuffer(file);
-	}
 
 	function resetClasses() {
 		Sidebar_element.classList.remove('translate-x-0', 'opacity-100');
@@ -47,14 +40,6 @@
 	function updateClasses() {
 		Sidebar_element.classList.remove('translate-x-full', 'opacity-0', 'transition-duration-0');
 		Sidebar_element.classList.add('translate-x-0', 'opacity-100');
-	}
-
-	function process() {
-		console.log('process in child');
-		setContext('file', img_array);
-		console.log(img_array);
-
-		dispatch('process');
 	}
 </script>
 
@@ -67,124 +52,21 @@
 			class="h-full flex flex-col items-start justify-center border-l-[1px] bg-light dark:bg-dark rounded-none border-dark dark:border-light "
 		>
 			<SidebarGroup class="w-full ">
-				<div
-					class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-				>
-					<label
-						class="bg-ctp-surface0 border-[1px] border-ctp-subtext0 hover:cursor-pointer focus:outline-none focus:border-ctp-text w-full"
-					>
-						<input
-							type="file"
-							name="preview"
-							class="hidden"
-							on:change={(e) => {
-								preview_value = e.target.files[0].name;
-								reader(e.target.files[0], (err, res) => {
-									img_array = res;
-								});
-							}}
-						/>
-						<div class=" leading-[2.5rem] h-10 w-full px-2 text-ctp-subtext0">
-							{preview_value}
-						</div>
-					</label>
-				</div>
+				<Top {update_file} />
 			</SidebarGroup>
 			<SidebarGroup
 				border
 				borderClass="pt-4 mt-4 border-t  border-dark dark:border-light"
 				class="w-full"
 			>
-				<SidebarItem label="Kanban" {spanClass}>
-					<svelte:fragment slot="icon">
-						<GridSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-					<svelte:fragment slot="subtext">
-						<span
-							class="inline-flex justify-center items-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300"
-						>
-							Pro
-						</span>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Inbox" {spanClass}>
-					<svelte:fragment slot="icon">
-						<MailBoxSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-					<svelte:fragment slot="subtext">
-						<span
-							class="inline-flex justify-center items-center p-3 ms-3 w-3 h-3 text-sm font-medium text-primary-600 bg-primary-200 rounded-full dark:bg-primary-900 dark:text-primary-200"
-						>
-							3
-						</span>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Users">
-					<svelte:fragment slot="icon">
-						<UserSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Products">
-					<svelte:fragment slot="icon">
-						<ShoppingBagSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Sign In">
-					<svelte:fragment slot="icon">
-						<ArrowRightToBracketOutline
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Sign Up">
-					<svelte:fragment slot="icon">
-						<EditOutline
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
+				<Middle />
 			</SidebarGroup>
 			<SidebarGroup
 				border
 				borderClass="pt-4 mt-4 border-t  border-dark dark:border-light"
 				class="w-full"
 			>
-				<SidebarItem label="Upgrade to Pro">
-					<svelte:fragment slot="icon">
-						<FireSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Documentation">
-					<svelte:fragment slot="icon">
-						<BookSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-				<SidebarItem label="Components">
-					<svelte:fragment slot="icon">
-						<RestoreWindowOutline
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
-
-				<button
-					class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-					on:click={process}
-				>
-					Process
-				</button>
+				<Bottom on:process={process} />
 			</SidebarGroup>
 		</SidebarWrapper>
 	</Sidebar>

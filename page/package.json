@@ -4,7 +4,7 @@
 	"scripts": {
 		"wasm": "wasm-pack build --target web --out-dir page/src/lib/wasm/pkg",
 		"wasm-release": "wasm-pack build --target web --out-dir page/src/lib/wasm/pkg --release",
-		"dev": "yarn run wasm && vite dev",
+		"dev": "vite dev",
 		"build": "yarn run wasm-release && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",

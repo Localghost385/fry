@@ -1,7 +1,6 @@
 <script async>
 	import { HeroHeader } from 'flowbite-svelte-blocks';
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { onMount } from 'svelte';
 	import ExpandBar from '$lib/components/expand_bar.svelte';
 </script>
 
