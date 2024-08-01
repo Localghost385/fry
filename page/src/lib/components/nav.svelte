@@ -15,7 +15,8 @@
 
 	import ExpandBar from './expand_bar.svelte';
 
-	$: activeUrl = $page.url.pathname === '/' ? '/' : $page.url.pathname.replace(/\/$/, '');
+	$: activeUrl =
+		$page.url.pathname === '/' ? '/' : $page.url.pathname.replace(/\/$/, '');
 	$: hide_menu = true;
 
 	let links = [
@@ -34,9 +35,12 @@
 	class="sticky top-0 z-30 start-0 bg-light dark:bg-dark border-b-2 border-dark dark:border-light transition-colors duration-300"
 >
 	<div class=" flex flex-row items-center justify-between gap-[3vw]">
-		<DarkMode class="self-center" />
+		<DarkMode
+			class="self-center flex items-center rounded-md p-2 text-base font-normal bg-light dark:bg-dark hover:bg-light dark:hover:bg-dark text-dark dark:text-light border-[1px] dark:border-dark border-light hover:border-dark dark:hover:border-light hover:shadow-md dark:hover:shadow-xl transition-all cursor-pointer"
+		/>
 		<NavBrand href="/">
-			<span class="self-center whitespace-nowrap text-xl font-semibold text-dark dark:text-light"
+			<span
+				class="self-center whitespace-nowrap text-xl font-semibold text-dark dark:text-light"
 				>Fry</span
 			>
 		</NavBrand>

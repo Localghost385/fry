@@ -1,5 +1,11 @@
 <script>
-	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper, Fileupload } from 'flowbite-svelte';
+	import {
+		Sidebar,
+		SidebarGroup,
+		SidebarItem,
+		SidebarWrapper,
+		Fileupload
+	} from 'flowbite-svelte';
 	import {
 		ChartPieSolid,
 		GridSolid,
@@ -34,11 +40,19 @@
 
 	function resetClasses() {
 		Sidebar_element.classList.remove('translate-x-0', 'opacity-100');
-		Sidebar_element.classList.add('translate-x-full', 'opacity-0', 'transition-duration-0');
+		Sidebar_element.classList.add(
+			'translate-x-full',
+			'opacity-0',
+			'transition-duration-0'
+		);
 	}
 
 	function updateClasses() {
-		Sidebar_element.classList.remove('translate-x-full', 'opacity-0', 'transition-duration-0');
+		Sidebar_element.classList.remove(
+			'translate-x-full',
+			'opacity-0',
+			'transition-duration-0'
+		);
 		Sidebar_element.classList.add('translate-x-0', 'opacity-100');
 	}
 </script>
@@ -49,7 +63,7 @@
 >
 	<Sidebar class="h-full">
 		<SidebarWrapper
-			class="h-full flex flex-col items-start justify-center border-l-[1px] bg-light dark:bg-dark rounded-none border-dark dark:border-light "
+			class="h-full flex flex-col items-start justify-center border-l-[1px] bg-light dark:bg-dark rounded-none border-dark dark:border-light transition-all"
 		>
 			<SidebarGroup class="w-full ">
 				<Top {update_file} />

@@ -16,7 +16,9 @@
 	import '$lib/app.css';
 </script>
 
-<div class=" bg-light dark:bg-dark text-dark dark:text-light border-dark dark:border-light transition-colors duration-300">
+<div
+	class=" bg-light dark:bg-dark text-dark dark:text-light border-dark dark:border-light transition-colors duration-300"
+>
 	<Nav />
 
 	<div class="hidden visible" />
@@ -26,8 +28,12 @@
 	<Footer />
 
 	{#if opacity != '0'}
-		<div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-			<div class="text-center transition-all duration-300 opacity-{opacity} ease-in-out">
+		<div
+			class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center"
+		>
+			<div
+				class="text-center transition-all duration-300 opacity-{opacity} ease-in-out"
+			>
 				<Spinner size="20" color="dark" />
 			</div>
 		</div>

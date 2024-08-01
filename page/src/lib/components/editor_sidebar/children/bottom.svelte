@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+	class="self-center flex items-center rounded-md p-2 text-base font-normal bg-light dark:bg-dark hover:bg-light dark:hover:bg-dark text-dark dark:text-light border-[1px] dark:border-dark border-light hover:border-dark dark:hover:border-light hover:shadow-md dark:hover:shadow-xl transition-all cursor-pointer"
 >
 	<button on:click={process}> Process </button>
 </div>
