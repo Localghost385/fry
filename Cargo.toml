@@ -5,10 +5,17 @@ edition = "2021"
 description = "an image processing tool from hell"
 license = "MIT"
 
+[profile.release]
+debug = true
+
+[[bin]]
+name = "fry_cli"
+path = "./cli/main.rs"
+
 [lib]
 name = "fry_core"
 path = "./core/core.rs"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 wasm-bindgen = "0.2.87"
@@ -17,5 +24,7 @@ edge-detection = "0.2.6"
 image = "0.24.9"
 rand = "0.8.5"
 wgpu = "22.0.0"
+console_error_panic_hook = "0.1.7"
+web-sys = "0.3.69"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

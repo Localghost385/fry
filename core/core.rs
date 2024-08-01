@@ -4,13 +4,14 @@ use image::imageops::contrast;
 use image::{DynamicImage, ImageBuffer};
 use rand::Rng;
 use std::io::Cursor;
+use std::panic;
 use wasm_bindgen::prelude::*;
 
 // █▀▄ ██▀ ▄▀▄ █▀▄   █ █▄ ▄█ ▄▀▄ ▄▀  ██▀   █▀ █▀▄ ▄▀▄ █▄ ▄█   ██▄ ▀▄▀ ▀█▀ ██▀ ▄▀▀
 // █▀▄ █▄▄ █▀█ █▄▀   █ █ ▀ █ █▀█ ▀▄█ █▄▄   █▀ █▀▄ ▀▄▀ █ ▀ █   █▄█  █   █  █▄▄ ▄██
-fn read_image(image_data: &[u8]) -> image::DynamicImage {
-    let img = image::load_from_memory(image_data).unwrap();
-    image::DynamicImage::ImageRgba8(contrast(&img, 5.0))
+fn read_image(image_data: &[u8]) -> Result<DynamicImage, image::ImageError> {
+    let img = image::load_from_memory(image_data);
+    img.map(|img| DynamicImage::ImageRgba8(contrast(&img, 5.0)))
 }
 
 // ▄▀▀ ▄▀▄ █ █ ██▀   █ █▄ ▄█ ▄▀▄ ▄▀  ██▀
@@ -19,7 +20,7 @@ fn save_img(pixels: ImageBuffer<image::Rgb<u8>, Vec<u8>>, pixels_vec: Vec<u8>) -
     let new_img: ImageBuffer<image::Rgb<u8>, Vec<u8>> =
         ImageBuffer::from_vec(pixels.width(), pixels.height(), pixels_vec).unwrap();
     let output_image = DynamicImage::from(new_img);
-    let output_image = image::DynamicImage::ImageRgba8(contrast(&output_image, 20.0));
+    let output_image = DynamicImage::ImageRgba8(contrast(&output_image, 20.0));
     let mut output_bytes: Vec<u8> = Vec::new();
     output_image
         .write_to(
@@ -33,7 +34,7 @@ fn save_img(pixels: ImageBuffer<image::Rgb<u8>, Vec<u8>>, pixels_vec: Vec<u8>) -
 
 // ██▀ █▀▄ ▄▀  ██▀   █▀▄ ██▀ ▀█▀ ██▀ ▄▀▀ ▀█▀ █ ▄▀▄ █▄ █
 // █▄▄ █▄▀ ▀▄█ █▄▄   █▄▀ █▄▄  █  █▄▄ ▀▄▄  █  █ ▀▄▀ █ ▀█
-fn detect_edges(img: &image::DynamicImage) -> ImageBuffer<image::Rgb<u8>, Vec<u8>> {
+fn detect_edges(img: &DynamicImage) -> ImageBuffer<image::Rgb<u8>, Vec<u8>> {
     let detection = edge_detection::canny(
         img.to_luma8(),
         1.2,  // sigma
@@ -230,12 +231,25 @@ fn invert_chunks(mut pixels_vec: Vec<u8>, pixels_width: u32, pixels_height: u32)
     pixels_vec
 }
 
-// █▄ ▄█ ▄▀▄ █ █▄ █
-// █ ▀ █ █▀█ █ █ ▀█
+// █▀▄ █▀▄ ▄▀▄ ▄▀▀ ██▀ ▄▀▀ ▄▀▀   █ █▄ ▄█ ▄▀▄ ▄▀  ██▀
+// █▀  █▀▄ ▀▄▀ ▀▄▄ █▄▄ ▄██ ▄██   █ █ ▀ █ █▀█ ▀▄█ █▄▄
 #[wasm_bindgen]
-pub fn main() -> Vec<u8> {
-    let image_bytes = include_bytes!("tmp.jpg");
-    let img = read_image(image_bytes);
+pub fn process(input_image: Vec<u8>) -> Vec<u8> {
+    panic::set_hook(Box::new(console_error_panic_hook::hook));
+
+    let mut image_bytes: Vec<u8> = include_bytes!("tmp3.jpg").to_vec();
+    if input_image.len() > 0 {
+        image_bytes = input_image;
+    }
+    
+    let img = match read_image(&image_bytes) {
+        Ok(img) => img,
+        Err(err) => {
+            println!("{}", err);
+            return vec![];
+        }
+    };
+
     let edge_detection = detect_edges(&img);
     let pixels = img.into_rgb8();
     let edge_detection_pixels = &edge_detection;

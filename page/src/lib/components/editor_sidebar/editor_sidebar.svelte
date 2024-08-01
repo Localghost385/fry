@@ -14,10 +14,12 @@
 		LifeSaverSolid
 	} from 'flowbite-svelte-icons';
 
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, setContext } from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	let spanClass = 'flex-1 ms-3 whitespace-nowrap';
+	$: preview_value = 'Upload a thumbnail';
+	let img_array = new Uint8Array(0);
 
 	let fileuploadprops = {
 		id: 'user_avatar'
@@ -27,8 +29,15 @@
 
 	onMount(() => {
 		resetClasses();
-		setTimeout(updateClasses, 50);
+		setTimeout(updateClasses, 1);
 	});
+
+	function reader(file, callback) {
+		const fr = new FileReader();
+		fr.onload = () => callback(null, fr.result);
+		fr.onerror = (err) => callback(err);
+		fr.readAsArrayBuffer(file);
+	}
 
 	function resetClasses() {
 		Sidebar_element.classList.remove('translate-x-0', 'opacity-100');
@@ -42,6 +51,8 @@
 
 	function process() {
 		console.log('process in child');
+		setContext('file', img_array);
+		console.log(img_array);
 
 		dispatch('process');
 	}
@@ -56,13 +67,34 @@
 			class="h-full flex flex-col items-start justify-center border-l-[1px] bg-light dark:bg-dark rounded-none border-dark dark:border-light "
 		>
 			<SidebarGroup class="w-full ">
-				<SidebarItem label="Dashboard">
-					<svelte:fragment slot="icon">
-						<ChartPieSolid
-							class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+				<div
+					class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+				>
+					<label
+						class="bg-ctp-surface0 border-[1px] border-ctp-subtext0 hover:cursor-pointer focus:outline-none focus:border-ctp-text w-full"
+					>
+						<input
+							type="file"
+							name="preview"
+							class="hidden"
+							on:change={(e) => {
+								preview_value = e.target.files[0].name;
+								reader(e.target.files[0], (err, res) => {
+									img_array = res;
+								});
+							}}
 						/>
-					</svelte:fragment>
-				</SidebarItem>
+						<div class=" leading-[2.5rem] h-10 w-full px-2 text-ctp-subtext0">
+							{preview_value}
+						</div>
+					</label>
+				</div>
+			</SidebarGroup>
+			<SidebarGroup
+				border
+				borderClass="pt-4 mt-4 border-t  border-dark dark:border-light"
+				class="w-full"
+			>
 				<SidebarItem label="Kanban" {spanClass}>
 					<svelte:fragment slot="icon">
 						<GridSolid
@@ -146,11 +178,7 @@
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-				<div
-					class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-				>
-					<Fileupload {...fileuploadprops} />
-				</div>
+
 				<button
 					class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
 					on:click={process}

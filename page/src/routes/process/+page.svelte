@@ -1,9 +1,9 @@
 <script>
-	import init, { main } from '$lib/wasm/pkg/fry_core';
-	import Editor_sidebar from '$lib/components/editor_sidebar.svelte';
+	import init, { process } from '$lib/wasm/pkg/fry_core';
+	import Editor_sidebar from '$lib/components/editor_sidebar/editor_sidebar.svelte';
 	import { page } from '$app/stores';
 
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 
 	let spanClass = 'flex-1 ms-3 whitespace-nowrap';
 
@@ -11,18 +11,22 @@
 
 	let img_element = undefined;
 
-	async function process() {
+	async function execute_wasm() {
+		await init();
 		console.log('process in parent');
-		let result = await main();
+		let file = getContext('file');
+		console.log("start file")
+		console.log(file);
+		console.log("end file")
+		// if (file.length == 0) {
+			// console.log('no file');
+			// return;
+		// }
+		let result = await process(new Uint8Array(file));
 		console.log(result);
 
 		img_element.src = URL.createObjectURL(new Blob([result.buffer], { type: 'image/png' }));
 	}
-
-	onMount(async () => {
-		await init();
-		console.log('init');
-	});
 </script>
 
 <div
@@ -34,7 +38,7 @@
 				<img src="" alt="loading" bind:this={img_element} />
 			</div>
 			{#key activeUrl}
-				<Editor_sidebar on:process={process} />
+				<Editor_sidebar on:process={execute_wasm} />
 			{/key}
 		</div>
 	</div>
